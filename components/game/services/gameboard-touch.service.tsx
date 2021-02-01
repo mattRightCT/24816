@@ -35,7 +35,6 @@ class GameboardTouchService extends GameMoveClass {
    * @return {void}
   **/
   private handleTouchStart(touchEvent: TouchEvent): void {
-    console.log(touchEvent.targetTouches[0]);
     this.startTouch = touchEvent.targetTouches[0];
   }
   /**
