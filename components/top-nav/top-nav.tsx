@@ -17,7 +17,7 @@ const TopNavComponent = () => {
       <div style={{
         gridColumn: '2',
         display: 'grid',
-        gridTemplateColumns: '50px 150px auto 150px',
+        gridTemplateColumns: '50px min(150px, 30vmin) auto min(150px, 30vmin)',
         gridTemplateRows: '5% auto 5%'
       }}>
         <div style={{gridColumn: 1, gridRow: 2}} className='center-contents'>
