@@ -138,6 +138,10 @@ const XLHead = (props: XLHeadMetaTagProps) => {
   // todo need to test the order in which this is rendered vs. when prop data is received
   return (
     <Head>
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      </link>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+      </link>
       <title>{props.title[0].content && AppConstants.appName}</title>
       <link rel="icon" href="/favicon.ico"/>
       {XLHeadUtils.generateMetaTagJSXElements(props)}
