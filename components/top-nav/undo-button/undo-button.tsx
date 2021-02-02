@@ -12,7 +12,7 @@ function undo(): void {
 
 const UndoButtonComponent = () => {
   return (
-    <button type="button" onClick={undo}>
+    <button className='nav' type="button" onClick={undo}>
       Undo
     </button>
   );

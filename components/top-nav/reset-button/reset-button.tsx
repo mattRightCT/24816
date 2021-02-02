@@ -12,7 +12,7 @@ function reset(): void {
 
 const ResetButtonComponent = () => {
   return (
-    <button type="button" onClick={reset}>
+    <button className='nav' type="button" onClick={reset}>
       Reset
     </button>
   );
