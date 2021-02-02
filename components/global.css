@@ -2,16 +2,29 @@
 body {
   margin: 0;
   background-color: #000;
+  position: fixed;
 }
 
 p {
-  font-family: 'Lucida Console';
+  font-family: 'Roboto Mono', monospace;
 }
 
 button {
-  font-family: 'Lucida Console';
+  font-family: 'Roboto Mono', monospace;
   font-size: max(2.5vmin, 18px);
   font-weight: bold;
+  padding: 2px 5px;
+  background-color: black;
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+
+button.nav {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
 div.center-contents {
