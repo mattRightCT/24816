@@ -48,7 +48,7 @@ describe('GameStateService', () => {
       expect(
         GameStateService['gameboardsAreTheSame'](
           simpleRightExpected,
-          GameStateService['moveBlocks']('right', simple)
+          GameStateService['moveBlocks']('right', simple).board
         )
       ).toBe(true);
     });
@@ -56,7 +56,7 @@ describe('GameStateService', () => {
       expect(
         GameStateService['gameboardsAreTheSame'](
           simple,
-          GameStateService['moveBlocks']('left', simple)
+          GameStateService['moveBlocks']('left', simple).board
         )
       ).toBe(true);
     });
@@ -79,7 +79,7 @@ describe('GameStateService', () => {
       expect(
         GameStateService['gameboardsAreTheSame'](
           combinesRightExpected,
-          GameStateService['moveBlocks']('right', combinesRight)
+          GameStateService['moveBlocks']('right', combinesRight).board
         )
       ).toBe(true);
     });
@@ -99,7 +99,7 @@ describe('GameStateService', () => {
       expect(
         GameStateService['gameboardsAreTheSame'](
           combinesUpExpected,
-          GameStateService['moveBlocks']('up', combinesUp)
+          GameStateService['moveBlocks']('up', combinesUp).board
         )
       ).toBe(true);
     });
@@ -119,7 +119,7 @@ describe('GameStateService', () => {
       expect(
         GameStateService['gameboardsAreTheSame'](
           combinesDownExpected,
-          GameStateService['moveBlocks']('down', combinesDown)
+          GameStateService['moveBlocks']('down', combinesDown).board
         )
       ).toBe(true);
     });
