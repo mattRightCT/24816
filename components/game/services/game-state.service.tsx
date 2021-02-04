@@ -22,7 +22,6 @@ export class GameStateService {
   // Game state
   private gameState$: BehaviorSubject<GameState> = new BehaviorSubject<GameState>(GameStateService.initGameState());
   get gameState(): BehaviorSubject<GameState> {return this.gameState$;}
-  // todo i want to measure how big this gets in long games -- can we save this with game state without issues?
   // Keeping track of all past states, so that we can undo moves
   private allPastStates: GameState[] = [GameStateService.initGameState()];
   // Initialize game state and movement subscription
