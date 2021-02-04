@@ -64,12 +64,37 @@ class GameSettingsService {
   /**
    * @method
    * @description
-   *
-   * @param {}
-   * @param {}
-   * @return {}
+   * Gives us a non-observable version of the game settings, in case we need to use it
+   * @return {GameSettings} the current game settings
   **/
   public getGameSettings(): GameSettings {return this.gameSettings$.getValue();}
+  /**
+   * @method
+   * @description
+   * Compare every relevant game setting property to ensure both game setting objects are the same
+   * @param gs1 {GameSettings}
+   * @param gs2 {GameSettings}
+   * @return {boolean} whether the two given gamesetting objects are the same
+  **/
+  public gameSettingsMatch(gs1: GameSettings, gs2: GameSettings): boolean {
+    // First we check if the list of keys are the same size
+    if (Object.keys(gs1).length !== Object.keys(gs2).length) {
+      return false;
+    }
+    // Then we check that all keys are the same, with the same values
+    for (let propName of Object.keys(gs1)) {
+      // Make sure second object has this property name
+      if (gs2[propName] === undefined) {
+        return false;
+      }
+      // Then ensure that the values are the same
+      if (gs2[propName] !== gs1[propName]) {
+        return false;
+      }
+    }
+    // if we get here then the two settings are the same
+    return true;
+  }
 }
 
 const gameSettingsService = new GameSettingsService();
