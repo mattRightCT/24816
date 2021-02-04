@@ -1,5 +1,6 @@
 import React, { KeyboardEvent, TouchEvent, useEffect, useState } from 'react';
 import GameStateService, { GameState } from './services/game-state.service';
+import ScreenService from '../../util/screen.service';
 import {Subscription} from 'rxjs';
 import GameboardKeyService from './services/gameboard-key.service';
 import GameboardTouchService, { TouchType } from './services/gameboard-touch.service';
@@ -77,25 +78,76 @@ function createRGBStringForBlocks(valueForLog: number): string {
 /**
  * @method
  * @description
+ * Determines the font size based on the block value (to ensure it always fits)
+ * @param blockValue {number} the value displayed in the current block
+ * @param boardLength {number} the number of blocks in one dimension of the board
+ * @param boardSize {number} the size of the board visually in vmins
+ * @return {string} the font size (in vmins) we want to use
+**/
+function determineBoardFontSize(blockValue: number, boardLength: number, boardSize: number): string {
+  // Five digit numbers on a 4x4 board are perfect at this size
+  const baseFontSize: number = boardSize / boardLength / 4;
+  let fontSize: number = blockValue < 10? baseFontSize * 2.75 :
+    blockValue < 100? baseFontSize * 2.25 :
+    blockValue < 1000? baseFontSize * 1.75 :
+    blockValue < 10000? baseFontSize * 1.3 :
+    blockValue < 100000? baseFontSize : baseFontSize * 0.5;
+  return fontSize.toString() + 'vmin';
+}
+/**
+ * @method
+ * @description
+ * Determines the size of the board in vmins
+ * @return {number} size of the board in vmins
+**/
+function determineBoardSize(): number {
+  // If we are on the server, cannot call the window object, so we need a default value
+  if (GeneralUtil.onServer()) {
+    return 97;
+  }
+  // Set the largest and smallest gameboard sizes (as vmins)
+  const largestGameboardSize: number = 97;
+  const smallestGameboardSize: number = 85;
+  // If the width is bigger, then we just use the smallest size
+  // Otherwise we take the minimum of 97 and the size of the height in vmins minus 15
+  return window.innerWidth >= window.innerHeight? smallestGameboardSize :
+    Math.min(largestGameboardSize, window.innerHeight / window.innerWidth * 100 - 15);
+}
+/**
+ * @method
+ * @description
  * Gameboard component
 **/
 const GameboardComponent = () => {
+  // Game state
   const [gameState, setGameState] = useState<GameState>(undefined);
+  // Window width is bigger or not
+  const [gameboardSize, setGbSize] = useState<number>(determineBoardSize());
   /**
    * @method
    * @description
    * Need to subscribe to gameboard data so that we know when and how to update
   **/
   useEffect(() => {
+    // All subscriptions
+    const allSubs: Subscription = new Subscription();
     // Subscribe to game state
-    const gameStateSub: Subscription = GameStateService.gameState.subscribe(
+    allSubs.add(GameStateService.gameState.subscribe(
       (newGameState: GameState) => {
         setGameState(newGameState);
       }
-    );
+    ));
+    // Subscribe to window resizing
+    allSubs.add(ScreenService.screenResized.subscribe(
+      (resized: boolean) => {
+        if (resized) {
+          setGbSize(determineBoardSize)
+        }
+      }
+    ));
     // Then unsubscribe when we are finished
     return function cleanup() {
-      gameStateSub.unsubscribe();
+      allSubs.unsubscribe();
     };
   });
   
@@ -107,10 +159,14 @@ const GameboardComponent = () => {
     <div
       style={{// We want an acceptably sized gameboard regardless of screen size (but without much effort)
         display: 'grid',
-        gridTemplateColumns: 'auto 80vmin auto',
-        gridTemplateRows: 'auto 80vmin auto',
+        gridTemplateColumns: 'auto ' + gameboardSize.toString() + 'vmin auto',
+        gridTemplateRows: 'auto ' + gameboardSize.toString() + 'vmin auto',
         backgroundColor: '#000'
       }}
+      onKeyDown={handleKeyDownEvent}
+      onTouchStart={handleTouchStartEvent}
+      onTouchEnd={handleTouchEndEvent}
+      tabIndex={0}
     >
       <div
         style={{
@@ -121,10 +177,6 @@ const GameboardComponent = () => {
           gridTemplateColumns: 'repeat(' + gameState.board.length.toString() + ', 1fr)',
           gridTemplateRows: 'repeat(' + gameState.board.length.toString() + ', 1fr)'
         }}
-        onKeyDown={handleKeyDownEvent}
-        onTouchStart={handleTouchStartEvent}
-        onTouchEnd={handleTouchEndEvent}
-        tabIndex={0}
       >
         {createGameboardIndices(gameState.board.length).map((gameboardIndex) =>
           <div
@@ -138,8 +190,12 @@ const GameboardComponent = () => {
             className='center-contents'
           >
             <p style={{
-              fontSize: '4vmin', margin: '0', fontWeight: 'bold',
-              color: 'white'
+              fontSize: determineBoardFontSize(
+                gameState.board[gameboardIndex.y][gameboardIndex.x],
+                gameState.board.length,
+                gameboardSize
+              ),
+              margin: '0', fontWeight: 'bold', color: 'white'
             }}>
               {// If the value is zero, we just want the block to have no text
                 gameState.board[gameboardIndex.y][gameboardIndex.x] === 0?
