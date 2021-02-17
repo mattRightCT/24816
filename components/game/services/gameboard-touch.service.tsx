@@ -9,7 +9,7 @@ export type TouchDistAndDirection = {
 
 class GameboardTouchService extends GameMoveClass {
   // Minimum distance touch needs to move to count
-  private minTouchDist: number = 10;
+  private minTouchDist: number = 20;
   // Current start of touch
   private startTouch: Touch;
   /**
