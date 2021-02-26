@@ -3,6 +3,7 @@ import MenuButtonComponent from './menu-button/menu-button'
 import UndoButtonComponent from './undo-button/undo-button'
 import ResetButtonComponent from './reset-button/reset-button'
 import ScoreComponent from './score/score'
+import MenuComponent from '../menu/menu.component'
 
 const TopNavComponent = () => {
   return (
@@ -14,6 +15,9 @@ const TopNavComponent = () => {
       border: '2px solid white',
       marginBottom: '7px'
     }}>
+      {/* We keep the pop up menu right here so its always capable of being displayed */}
+      <MenuComponent></MenuComponent>
+      {/* This is the top nav */}
       <div style={{
         gridColumn: '2',
         display: 'grid',
