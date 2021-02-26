@@ -34,6 +34,28 @@ div.center-contents {
   align-items: center;
 }
 
+/*
+ * Menu frame
+*/
+div.menu-frame {
+  transition-property: width, height;
+  transition-duration: 0.25s;
+}
+
+div.menu-frame.open {
+
+}
+
+a.menu {
+  font-family: 'Roboto Mono', monospace;
+  font-size: max(3.5vmin, 26px);
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 /*!
  * Hamburgers
  * @description Tasty CSS-animated hamburgers
