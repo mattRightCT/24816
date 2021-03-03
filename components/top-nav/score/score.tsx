@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
 import GameStateService, { GameState } from '../../game/services/game-state.service'
-import HiscoreService, {Score} from '../../game/services/hiscore.service'
+import HiscoreService, { Score } from '../../game/services/hiscore.service'
 
 const ScoreComponent = () => {
   const [score, setScore] = useState<number>(0);

@@ -8,6 +8,6 @@ const FooterComponent = () => {
       backgroundColor: '#000'
     }}></div>
   );
-}
+};
 
 export default FooterComponent;

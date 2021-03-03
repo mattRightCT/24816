@@ -39,6 +39,6 @@ const TopNavComponent = () => {
       </div>
     </div>
   );
-}
+};
 
 export default TopNavComponent;
