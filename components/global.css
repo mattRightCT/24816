@@ -8,6 +8,7 @@ html, body {
 
 p {
   font-family: 'Roboto Mono', monospace;
+  color: white;
 }
 
 button {
@@ -33,6 +34,26 @@ div.center-contents {
   justify-content: center;
   align-items: center;
 }
+
+/*
+ * Input field valid vs. invalid
+*/
+input.form {
+  background-color: black;
+  color: white;
+  font-size: max(4vmin, 24px);
+  width: max(15vmin, 75px);
+  text-align: center;
+}
+
+input.form:valid {
+  border: 2px solid white;
+}
+
+input.form:invalid {
+  border: 2px solid red;
+}
+
 
 /*
  * Menu frame
