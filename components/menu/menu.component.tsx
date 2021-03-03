@@ -4,6 +4,15 @@ import { Subscription } from 'rxjs';
 import {NavObjects, NavObject} from './nav-objects';
 import Link from 'next/link';
 
+/**
+ * @method
+ * @description
+ * Closes the menu after we navigate
+**/
+function closeMenu(): void {
+  OpenMenuService.closeMenu();
+}
+
 const MenuComponent = () => {
   const [menuState, setMenuState] = useState<MenuStatus>('closed');
   /**
@@ -48,7 +57,7 @@ const MenuComponent = () => {
         }}>
           <ul style={{padding: 0}}>
             {NavObjects.map((navObject: NavObject) =>
-              <li key={navObject.href} style={{margin: '10px 0'}}>
+              <li key={navObject.href} style={{margin: '10px 0'}} onClick={closeMenu}>
                 <Link href={navObject.href}>
                   <a className='menu'>{navObject.text}</a>
                 </Link>
