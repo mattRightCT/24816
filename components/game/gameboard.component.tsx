@@ -5,6 +5,8 @@ import {Subscription} from 'rxjs';
 import GameboardKeyService from './services/gameboard-key.service';
 import GameboardTouchService, { TouchType } from './services/gameboard-touch.service';
 import GeneralUtil from '../../util/general-util';
+import ButtonService from '../services/button.service';
+import ComponentUtil from '../../util/component-util';
 
 /**
  * @method
@@ -97,38 +99,22 @@ function determineBoardFontSize(blockValue: number, boardLength: number, boardSi
 /**
  * @method
  * @description
- * Determines the size of the board in vmins
- * @return {number} size of the board in vmins
-**/
-function determineBoardSize(): number {
-  // If we are on the server, cannot call the window object, so we need a default value
-  if (GeneralUtil.onServer()) {
-    return 97;
-  }
-  // Set the largest and smallest gameboard sizes (as vmins)
-  const largestGameboardSize: number = 97;
-  const smallestGameboardSize: number = 85;
-  // If the width is bigger, then we just use the smallest size
-  // Otherwise we take the minimum of 97 and the size of the height in vmins minus 15
-  return window.innerWidth >= window.innerHeight? smallestGameboardSize :
-    Math.min(largestGameboardSize, window.innerHeight / window.innerWidth * 100 - 15);
-}
-/**
- * @method
- * @description
  * Gameboard component
 **/
 const GameboardComponent = () => {
   // Game state
   const [gameState, setGameState] = useState<GameState>(undefined);
   // Window width is bigger or not
-  const [gameboardSize, setGbSize] = useState<number>(determineBoardSize());
+  const [gameboardSize, setGbSize] = useState<number>(ComponentUtil.determineBoardSize());
   /**
    * @method
    * @description
    * Need to subscribe to gameboard data so that we know when and how to update
   **/
   useEffect(() => {
+    // When we are instantiated, we need to tell the nav bar what our buttons and listen for them being clicked
+    ButtonService.setButton1Text('Reset');
+    ButtonService.setButton2Text('Undo');
     // All subscriptions
     const allSubs: Subscription = new Subscription();
     // Subscribe to game state
@@ -141,7 +127,23 @@ const GameboardComponent = () => {
     allSubs.add(ScreenService.screenResized.subscribe(
       (resized: boolean) => {
         if (resized) {
-          setGbSize(determineBoardSize)
+          setGbSize(ComponentUtil.determineBoardSize)
+        }
+      }
+    ));
+    // Subscribe to clicking the reset button
+    allSubs.add(ButtonService.navButton1.subscribe(
+      (button: boolean) => {
+        if (button) {
+          GameStateService.resetGameState();
+        }
+      }
+    ));
+    // Subscribe to clicking the undo button
+    allSubs.add(ButtonService.navButton2.subscribe(
+      (button: boolean) => {
+        if (button) {
+          GameStateService.undoLatestMove();
         }
       }
     ));
