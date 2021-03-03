@@ -21,7 +21,8 @@ export interface XLHeadMetaTagProps {
   image: MetaTagProps[],
   siteUrl: MetaTagProps[],
   type: MetaTagProps[],
-  twitterType: MetaTagProps[]
+  twitterType: MetaTagProps[],
+  key: string
 }
 
 export interface MetaTagProps {
@@ -76,7 +77,8 @@ export class XLHeadUtils {
       image: [],
       siteUrl: [],
       type: [],
-      twitterType: []
+      twitterType: [],
+      key: 'head'
     };
     // If we got undefined here, then we go ahead and generate default values
     if (minimumXLHeadProps === undefined) {
@@ -135,18 +137,17 @@ export class XLHeadUtils {
 }
 
 const XLHead = (props: XLHeadMetaTagProps) => {
-  // todo need to test the order in which this is rendered vs. when prop data is received
   return (
     <Head>
       <link rel="preconnect" href="https://fonts.gstatic.com">
       </link>
       <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
       </link>
-      <title>{props.title[0].content && AppConstants.appName}</title>
+      <title>{props.title[0].content || AppConstants.appName}</title>
       <link rel="icon" href="/favicon.ico"/>
       {XLHeadUtils.generateMetaTagJSXElements(props)}
     </Head>
   );
-}
+};
 
 export default XLHead;
