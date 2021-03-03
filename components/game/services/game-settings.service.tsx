@@ -95,6 +95,33 @@ class GameSettingsService {
     // if we get here then the two settings are the same
     return true;
   }
+  /**
+   * @method
+   * @description
+   * Sets new game settings (disseminates to all other services, etc..)
+   * @param newGameSettings {GameSettings} the new game settings
+   * @validation {None} these are checked prior to being passed to this service (because we need to tell the user
+   *  when they are putting invalid settings in)
+  **/
+  public setNewGameSettings(newGameSettings: GameSettings): void {
+    // First, double check that there was a change of settings
+    if (!this.gameSettingsMatch(this.gameSettings$.getValue(), newGameSettings)) {
+      // Only if they dont match do we execute a change
+      this.gameSettings$.next(newGameSettings);
+      // and save it locally
+      BrowserStorage.persist(GameSettingsService.myName, newGameSettings);
+    }
+  }
+  /****************************************************************************************
+  * Ensures consistency across the app
+  ****************************************************************************************/
+  /**
+   * @method
+   * @description
+   * Keeping track maximums and minimums
+  **/
+  get maxBoardSize(): number {return 20;}
+  get maxFourPerc(): number {return 100;}
 }
 
 const gameSettingsService = new GameSettingsService();
