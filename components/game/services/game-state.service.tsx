@@ -120,11 +120,25 @@ export class GameStateService {
    * Resets the game state and emits
    * @return {void}
   **/
-  public resetGameState(): void {
+  public resetGameState(newGameState?: GameState): void {
     // Remove all previous game states
     this.allPastStates = []
-    // Then create and emit a brand new game state
-    this.emitNextGameState(GameStateService.newGameState(GameSettingsService.getGameSettings()));
+    // if we received a new game state, then we emit that
+    if (newGameState) {
+      this.emitNextGameState(newGameState);
+    } else {
+      // Otherwise create and emit a brand new game state
+      this.emitNextGameState(GameStateService.newGameState(GameSettingsService.getGameSettings()));
+    }
+  }
+  /**
+   * @method
+   * @description
+   * Resets current game and sets up game matching the edited game state
+   * @param editedGameState {GameState} game state created in the editor
+  **/
+  public playEditedGame(editedGameState: GameState): void {
+    this.resetGameState(editedGameState);
   }
   /****************************************************************************************
   * Emitting game states
