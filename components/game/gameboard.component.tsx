@@ -4,26 +4,10 @@ import ScreenService from '../../util/screen.service';
 import {Subscription} from 'rxjs';
 import GameboardKeyService from './services/gameboard-key.service';
 import GameboardTouchService, { TouchType } from './services/gameboard-touch.service';
-import GeneralUtil from '../../util/general-util';
+import { GameboardStyleService } from './services/gameboard-style.service';
 import ButtonService from '../services/button.service';
 import ComponentUtil from '../../util/component-util';
 
-/**
- * @method
- * @description
- * Generates the gameboard indices we need to display the blocks
- * @param boardSize {number} size of the gameboard
- * @return {{x: number, y: number}[]} the gameboard indices
-**/
-function createGameboardIndices(boardSize: number): {x: number, y: number}[] {
-  let returnList: {x: number, y: number}[] = [];
-  for (let x = 0; x < boardSize; x++) {
-    for (let y = 0; y < boardSize; y++) {
-      returnList.push({x: x, y: y});
-    }
-  }
-  return returnList;
-}
 /**
  * @method
  * @description
@@ -47,55 +31,6 @@ function handleTouchEvent(touchEvent: TouchEvent, touchStartOrEnd: TouchType): v
 }
 function handleTouchStartEvent(touchEvent: TouchEvent): void {handleTouchEvent(touchEvent, 'start')}
 function handleTouchEndEvent(touchEvent: TouchEvent): void {handleTouchEvent(touchEvent, 'end')}
-/**
- * @method
- * @description
- * Creates an RGB color value that scales with the log of the valueForLog variable (base 2)
- * @param maxColorValue {number} the color value we want to be at when we hit log(valueForLog) === maxLog
- * @param minColorValue {number} the color value we want to be at when we have log(valueForLog) === 1
- * @param valueForLog {number} the value we are taking the log (base 2) of
- * @param maxLog {number} the maximum log(valueForLog) we expect (helps us scale the value correctly)
- * @return {number} the correct RGB value we want to input
-**/
-function colorLogValue(maxColorValue: number, minColorValue: number, valueForLog: number, maxLog: number): number {
-  return (maxColorValue - minColorValue) / maxLog * GeneralUtil.log(valueForLog, 2) + minColorValue;
-}
-/**
- * @method
- * @description
- * Generates the RGB string we want for the background color of our blocks
- * @param valueForLog {number} the value we want the color to scale off of
- * @return {string} string for RGB value
-**/
-function createRGBStringForBlocks(valueForLog: number): string {
-  // If this is a zero value, we want to use black
-  if (valueForLog === 0) {
-    return '#000';
-  }
-  // Otherwise calculate correct color to use
-  return 'rgb(' + colorLogValue(175, 5, valueForLog, 14) + ',' +
-    colorLogValue(175, 5, valueForLog, 14) + ',' +
-    colorLogValue(175, 5, valueForLog, 14) + ')';
-}
-/**
- * @method
- * @description
- * Determines the font size based on the block value (to ensure it always fits)
- * @param blockValue {number} the value displayed in the current block
- * @param boardLength {number} the number of blocks in one dimension of the board
- * @param boardSize {number} the size of the board visually in vmins
- * @return {string} the font size (in vmins) we want to use
-**/
-function determineBoardFontSize(blockValue: number, boardLength: number, boardSize: number): string {
-  // Five digit numbers on a 4x4 board are perfect at this size
-  const baseFontSize: number = boardSize / boardLength / 4;
-  let fontSize: number = blockValue < 10? baseFontSize * 2.75 :
-    blockValue < 100? baseFontSize * 2.25 :
-    blockValue < 1000? baseFontSize * 1.75 :
-    blockValue < 10000? baseFontSize * 1.3 :
-    blockValue < 100000? baseFontSize : baseFontSize * 0.5;
-  return fontSize.toString() + 'vmin';
-}
 /**
  * @method
  * @description
@@ -180,19 +115,21 @@ const GameboardComponent = () => {
           gridTemplateRows: 'repeat(' + gameState.board.length.toString() + ', 1fr)'
         }}
       >
-        {createGameboardIndices(gameState.board.length).map((gameboardIndex) =>
+        {GameboardStyleService.createGameboardIndices(gameState.board.length).map((gameboardIndex) =>
           <div
             key={'(' + gameboardIndex.x + ', ' + gameboardIndex.y + ')'}
             style={{
               gridColumn: (gameboardIndex.x + 1).toString(),
               gridRow: (gameboardIndex.y + 1).toString(),
-              backgroundColor: createRGBStringForBlocks(gameState.board[gameboardIndex.y][gameboardIndex.x]),
+              backgroundColor: GameboardStyleService.createRGBStringForBlocks(
+                gameState.board[gameboardIndex.y][gameboardIndex.x]
+              ),
               border: '2px solid white'
             }}
             className='center-contents'
           >
             <p style={{
-              fontSize: determineBoardFontSize(
+              fontSize: GameboardStyleService.determineBoardFontSize(
                 gameState.board[gameboardIndex.y][gameboardIndex.x],
                 gameState.board.length,
                 gameboardSize
