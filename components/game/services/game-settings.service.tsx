@@ -13,7 +13,7 @@ export type GameSettings = {
  * @description
  * Manages the games settings
 **/
-class GameSettingsService {
+export class GameSettingsService {
   // Game settings name
   private static myName: string = 'GameSettings';
   // Game settings observable
@@ -122,6 +122,12 @@ class GameSettingsService {
   **/
   get maxBoardSize(): number {return 20;}
   get maxFourPerc(): number {return 100;}
+  /****************************************************************************************
+  * For the GameSetting type
+  ****************************************************************************************/
+  public static gameSettingsID(settings: GameSettings): string {
+    return 'Size: ' + settings.boardSize + ' | Four Block: ' + settings.fourBlockPerc + '%';
+  }
 }
 
 const gameSettingsService = new GameSettingsService();
