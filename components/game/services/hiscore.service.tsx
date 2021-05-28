@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs'
 import GeneralUtil from '../../../util/general-util';
 import BrowserStorage from '../../../util/storage.util';
 import GameStateService, { GameState } from './game-state.service'
@@ -18,6 +18,9 @@ export class HiscoreService {
   get hiscore(): BehaviorSubject<Score> {return this.hiscore$;}
   // List of all scores
   private allScores: Score[] = HiscoreService.initAllScores();
+  // telling other services that scores have been added
+  private newScoreAdded$: Subject<boolean> = new Subject<boolean>();
+  get newScoreAdded(): Subject<boolean> {return this.newScoreAdded$;}
   // List of most recent score (helps us record scores correctly)
   private lastRecordedScore: Score;
   // Only record scores over this value
@@ -85,6 +88,10 @@ export class HiscoreService {
     if (scores === null) {
       // If not (or if score is not defined) then we return an empty list instead
       return [];
+    }
+    // We need to serialize the dates back into a real date format
+    for (let score of scores) {
+      score.date = new Date(score.date);
     }
     // if we do then return the saved scores
     return scores;
@@ -158,6 +165,8 @@ export class HiscoreService {
     this.allScores.push(newScore);
     // Persist to storage
     BrowserStorage.persist(HiscoreService.myCollection, this.allScores);
+    // Then tell everyone that we got a new score
+    this.newScoreAdded$.next(true);
   }
   /**
    * @method
@@ -232,6 +241,16 @@ export class HiscoreService {
     }
     return -1;
   }
+  /****************************************************************************************
+  * Interface with ScoresService
+  ****************************************************************************************/
+  /**
+   * @method
+   * @description
+   * Gives all scores to the scores service to allow for processing and display of data
+   * @return {Score[]} all of our scores
+  **/
+  public getAllScores(): Score[] {return this.allScores;}
 }
 
 const hiscoreService: HiscoreService = new HiscoreService();
