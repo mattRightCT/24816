@@ -214,14 +214,17 @@ export class GameStateService {
    * @return {number} number of open blocks
   **/
   private static calcNumOpenBlocks(gameBoard: number[][]): number {
-    return gameBoard.flat().reduce(
-      (numZeros, currBlock) => {
+    let numZeros: number = 0;
+    // Go through each block
+    for (let gameRow of gameBoard) {
+      for (let currBlock of gameRow) {
+        // Increment our counter if we find a zero block
         if (currBlock === 0) {
-          return numZeros + 1;
+          numZeros += 1;
         }
-        return numZeros;
-      }, 0
-    );
+      }
+    }
+    return numZeros;
   }
   /**
    * @method
