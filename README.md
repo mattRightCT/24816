@@ -1,27 +1,16 @@
-# NextJS Typescript Boilerplate
+# 24816: A Flexible 2048
+*[Play 24816 now](https://m2apps.co/)*
 
-Bootstrap a developer-friendly NextJS app configured with:
+The 2048 mobile app has been occasionally updated to include more intrusive ads, but no new features had been added in years. After years of playing this game, I had a few ideas for new features, but wasn't getting anywhere with the mobile devs, so I decided to make my own version and release it as a web app.
 
-- [Typescript](https://www.typescriptlang.org/)
-- Linting with [ESLint](https://eslint.org/)
-- Formatting with [Prettier](https://prettier.io/)
-- Linting, typechecking and formatting on by default using [`husky`](https://github.com/typicode/husky) for commit hooks
-- Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
+## New Features
+- Change the size of the board (can handle up to 20x20, though I wouldn't recommend going over 10x10, as the text gets increasingly hard to read)
+- Change the frequency with which '4' blocks are added. Personally, I found the game much more strategically challenging with '4'-block set to 0%.
+- Scores are tracked separately for each unique game setting to ensure accuracy.
+- All past scores are saved, letting you track your progress over time
+- Can 'Undo' more than one move. In fact, you can undo all the way back to the beginning of the game if you really wanted to.
+- For really serious 2048 players, you can create your own board with the 'Board Editor' to practice how to tackle tricky situations.
 
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
-# or
-yarn create next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## Roadmap
+- Graph to plot scores over time and across settings
+- Download all score data for players to perform their own custom analyses
